@@ -1,7 +1,7 @@
 import {
 	type SubscriberConfig,
 	type SubscriberArgs,
-	CustomerService,
+	OrderService,
 } from "@medusajs/medusa";
 
 export default async function handleCustomerCreated({
@@ -10,24 +10,20 @@ export default async function handleCustomerCreated({
 	container,
 	pluginOptions,
 }: SubscriberArgs<Record<string, string>>) {
-	const { token, email, first_name } = data;
 	const sendGridService = container.resolve("sendgridService");
 	sendGridService.sendEmail({
-		templateId: process.env.SENDGRID_TEMPLATE_PASSWORD_RESET,
+		templateId: process.env.SENDGRID_TEMPLATE_ORDER_CLAIM,
 		from: "info@beachsidewebdesigns.com",
-		to: email,
+		to: data.old_email,
 		dynamic_template_data: {
-			// any data necessary for your template...
-			resetLink: `${process.env.STORE_CORS}/store/customer/reset_password/${token}`,
-			first_name,
-			token,
+			confirmationLink: `${process.env.STORE_CORS}/store/customer/claim_order/${data.token}`,
 		},
 	});
 }
 
 export const config: SubscriberConfig = {
-	event: CustomerService.Events.PASSWORD_RESET,
+	event: "order-update-token.created",
 	context: {
-		subscriberId: "customer-password-reset-handler",
+		subscriberId: "customer-request-order-ownership",
 	},
 };

@@ -46,7 +46,7 @@ export default async function handleOrderPlaced({
 		// Perform any other actions with the order data here
 		const sendGridService = container.resolve("sendgridService");
 		sendGridService.sendEmail({
-			templateId: "d-e878566b19a14bdda9f768df8a79bd06",
+			templateId: process.env.SENDGRID_TEMPLATE_ORDER_PLACED,
 			from: "info@beachsidewebdesigns.com",
 			to: order.email,
 			dynamic_template_data: {

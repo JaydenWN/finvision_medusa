@@ -12,7 +12,7 @@ export default async function handleCustomerCreated({
 }: SubscriberArgs<Record<string, string>>) {
 	const sendGridService = container.resolve("sendgridService");
 	sendGridService.sendEmail({
-		templateId: "d-1d60a3d79cf845b69c64488f579bddd0",
+		templateId: process.env.SENDGRID_TEMPLATE_CUSTOMER_SIGNUP,
 		from: "info@beachsidewebdesigns.com",
 		to: data.email,
 		dynamic_template_data: {
